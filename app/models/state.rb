@@ -3,4 +3,10 @@ class State < ActiveRecord::Base
   
   belongs_to :country
   has_many :cities
+  
+  validates_presence_of :name, :country_id
+  
+  scope :limit, lambda { |n| { :limit => n } }  
+  scope :begins_with_letter, lambda {|letter| {:conditions => ["substr(`name`, 1, 1) = ?", letter]} }
+  
 end
