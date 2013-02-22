@@ -6,4 +6,6 @@ class Location < ActiveRecord::Base
   belongs_to :state
   belongs_to :country
   
+  validates_presence_of :city_id, :country_id, :state_id
+  
 end

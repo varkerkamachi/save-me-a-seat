@@ -1,10 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
 
 countries = Country.create([{ name: 'Afghanistan' },
 { name: 'Albania' },
@@ -306,3 +299,21 @@ cities = City.create([{ country_id: 186, state_id:1, name: 'Montgomery' },
 { country_id: 186, state_id:49, name: 'Madison' },
 { country_id: 186, state_id:50, name: 'Cheyenne' }])
 
+
+locations = Location.create([{ city_id: 4, state_id: 4, country_id: 186, geoX:"", geoY:"" },
+  { city_id: 5, state_id: 5, country_id: 186, geoX:"", geoY:"" },
+  { city_id: 6, state_id: 6, country_id: 186, geoX:"", geoY:"" },
+])
+
+reservations = Reservation.create([{ location_start_id: 1, location_end_id: 2, passengers: 2, departure_date: '2013-01-05 08:34:21', return_date: '2013-01-25 14:09:21' },
+  { location_start_id: 1, location_end_id: 2, passengers: 2, departure_date: '2013-01-05 08:34:21', return_date: '2013-01-25 14:09:21' },
+  { location_start_id: 2, location_end_id: 2, passengers: 2, departure_date: '2013-01-05 08:34:21', return_date: '2013-01-25 14:16:28' },
+  { location_start_id: 2, location_end_id: 2, passengers: 4, departure_date: '2012-11-05 08:34:21', return_date: '2012-12-17 14:09:27' },
+])
+
+passengers = Passenger.create([{ reservations_id: 1, first_name: 'Andrew', last_name: 'Cranston', email: 'andrewmail@myemail.com' },
+  { reservations_id: 1, first_name: 'Jenny', last_name: 'G', email: 'heremail@myemail.com' },
+  { reservations_id: 2, first_name: 'Sheena', last_name: 'Easton', email: 'starmail@myemail.com' },
+  { reservations_id: 2, first_name: 'Jack', last_name: 'Kerouac', email: 'hismail@myemail.com' },
+  { reservations_id: 3, first_name: 'Daniel', last_name: 'Craig', email: '007@myemail.com' },
+])
