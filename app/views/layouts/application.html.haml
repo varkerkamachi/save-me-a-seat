@@ -1,0 +1,11 @@
+!!! html
+%html
+	%head
+		%meta{ :name => "Charset", :content => "UTF-8" }
+			%meta{ :name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" }
+			- if @pagedescription
+				%meta{ :name => "Description", :content => "#{@pagedescription}" }
+			%title="#{@pagetitle}"
+
+	%body
+		= yield
