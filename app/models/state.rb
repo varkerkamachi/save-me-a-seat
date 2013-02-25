@@ -8,5 +8,6 @@ class State < ActiveRecord::Base
   
   scope :limit, lambda { |n| { :limit => n } }  
   scope :begins_with_letter, lambda {|letter| {:conditions => ["substr(`name`, 1, 1) = ?", letter]} }
+  scope :from_city, lambda {|s| {:conditions => ["id = ?", s]} }
   
 end

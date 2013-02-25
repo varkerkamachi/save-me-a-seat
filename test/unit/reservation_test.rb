@@ -9,6 +9,7 @@ class ReservationTest < ActiveSupport::TestCase
     @nodepart = Reservation.new(:location_start_id=>1, :location_end_id=>4, :passengers=>2, :departure_date=>"", :return_date=>"2013-01-01 09:05:34")
     @noreturn = Reservation.new(:location_start_id=>1, :location_end_id=>4, :passengers=>2, :departure_date=>"2012-01-01 09:05:34", :return_date=>"")
     @baddates = Reservation.new(:location_start_id=>1, :location_end_id=>4, :passengers=>2, :departure_date=>"2012-01-01 09:05:34", :return_date=>"2010-01-01 09:05:34")
+    @samelocation = Reservation.new(:location_start_id=>1, :location_end_id=>1, :passengers=>2, :departure_date=>"2010-01-01 09:05:34", :return_date=>"2012-01-01 09:05:34")
   end
 
   
@@ -22,6 +23,9 @@ class ReservationTest < ActiveSupport::TestCase
   
   test "shouldn't save if the dates are out of chronology" do
     assert !@baddates.save
+  end
+  test "Shouldn't save if the departure and destination are identical" do
+    assert !@samelocation.save
   end
   
   test "Reservation departure is before date" do
@@ -41,10 +45,7 @@ class ReservationTest < ActiveSupport::TestCase
     @ret = Reservation.return_after('2010-01-01 09:05:34')
     assert_equal( Reservation.all.size, @ret.size)
   end
-  # scope :departure_previous_to, lambda { |n| {:conditions => ["where departure_date < ?", n]} }
-  # scope :return_previous_to, lambda { |n| {:conditions => ["where return_date < ?", n]} }
-  # scope :departure_after, lambda { |n| {:conditions => ["where departure_date > ?", n]} }
-  # scope :return_after, lambda { |n| {:conditions => ["where return_date > ?", n]} }
+  
   
 end
 

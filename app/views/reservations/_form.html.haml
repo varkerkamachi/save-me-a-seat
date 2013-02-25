@@ -1,0 +1,40 @@
+:javascript
+  jQuery(function() {
+    $( "#departure_location, #return_location" ).autocomplete({
+     source: #{@listdata}
+    });
+    $( "#departure_location" ).on('click, blur', function() {
+      $('#location_start_id').val($(this).val());
+    });
+    $( "#departure_date, #return_date" ).datepicker();
+  });
+
+= form_for @reservation, :url => @reservation.new_record? ? reservations_path : edit_reservation_path(@reservation), :html => { :multipart => true, :id => "reservation_form" } do |f|
+  =f.label "Departing from"
+  =f.text_field :departure_location, :id => "departure_location"
+  =f.hidden_field :location_start_id, :id => "location_start_id"
+  
+  %br
+  =f.label "Destination"
+  =f.text_field :return_location, :id => "return_location"
+  =f.hidden_field :location_end_id, :id => "location_end_id"
+  
+  %br
+  =f.label :passengers
+  =f.text_field :passengers, :length => 4
+  
+  %br
+  =f.label :departure_date
+  =f.text_field :departure_date, :id => "departure_date"
+  
+  =f.label :return_date
+  =f.text_field :return_date, :id => "return_date"
+  
+  %br
+  =f.submit
+      
+  /= @listdata
+  / - @listdata.each do |l|
+  /   %li
+  /     =l
+  
