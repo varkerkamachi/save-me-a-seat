@@ -1,6 +1,6 @@
 class Reservation < ActiveRecord::Base
   attr_accessible :location_start_id, :location_end_id, :passengers, :departure_date, :return_date, :id, :departure_location, :return_location
-  attr_accessor :departure_location, :return_location
+  attr_accessor :departure_location, :return_location, :departure_month, :departure_day, :departure_year, :departure_time, :return_month, :return_day, :return_year, :return_time
   
   belongs_to :passenger
   belongs_to :location_start, :class_name => Location, :foreign_key => "location_start_id"

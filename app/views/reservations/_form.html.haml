@@ -6,8 +6,55 @@
     $( "#departure_location" ).on('click, blur', function() {
       $('#location_start_id').val($(this).val());
     });
-    $( "#departure_date, #return_date" ).datepicker();
+    $( "#return_location" ).on('click, blur', function() {
+      $('#location_end_id').val($(this).val());
+    });
+    
+    function handleFormResults( data ) {
+      var res = data.split('&');
+      var output, passengers, destination, origin, dept, ret, dept_date, ret_date = '';
+      var regx = /^reservation|%5B|%5D/gi;
+      
+      res.splice(0,2);
+      res.splice(1,1);
+      res.splice(2,1);
+      dept = res.splice(2,4);
+      ret = res.splice(2,4)
+      
+      passengers = "Number of passengers: " + res[2].split('=')[1];
+      origin = "From: " + res[0].split('=')[1].replace('%2C', ',').replace(/\+/g, ' ');
+      destination = "To: " + res[1].split('=')[1].replace('%2C', ',').replace(/\+/g, ' ');
+      
+      dept_date = "Departing: ";
+      for(var i=0;i<dept.length;++i) {
+        dept_date += dept[i].split('=')[1] + ' ';
+      }
+      
+      ret_date = "Returning: ";
+      for(var i=0;i<ret.length;++i) {
+        ret_date += ret[i].split('=')[1] + ' ';
+      }
+      
+      
+      output = passengers + '\r\n';
+      output += origin + '\r\n';
+      output += destination + '\r\n';
+      output += dept_date + '\r\n';
+      output += ret_date + '\r\n';
+      
+      alert(output);
+      //buildFormattedOutput(str);
+    }
+
+    $('#submittor').on('click', function() {
+      var results = $('#reservation_form').serialize();
+      handleFormResults(results);
+      return false;
+    });
+    
   });
+
+#resultor
 
 = form_for @reservation, :url => @reservation.new_record? ? reservations_path : edit_reservation_path(@reservation), :html => { :multipart => true, :id => "reservation_form" } do |f|
   =f.label "Departing from"
@@ -20,21 +67,26 @@
   =f.hidden_field :location_end_id, :id => "location_end_id"
   
   %br
-  =f.label :passengers
-  =f.text_field :passengers, :length => 4
-  
-  %br
   =f.label :departure_date
-  =f.text_field :departure_date, :id => "departure_date"
-  
-  =f.label :return_date
-  =f.text_field :return_date, :id => "return_date"
+  =f.select(:departure_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m]]}), :selected => Date::MONTHNAMES[0])
+  =f.select(:departure_day, (1..31).each { |x| x}, :selected => '1')
+  =f.select(:departure_year, (2013..2014).each { |x| x}, :selected => '2013')
+  =f.select(:departure_time, %w(anytime morning noon evening late\ night).each { |x| [x, x]}, :selected => 'anytime')
   
   %br
-  =f.submit
+  =f.label :return_date
+  =f.select(:return_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m]]}), :selected => Date::MONTHNAMES[0])
+  =f.select(:return_day, (1..31).each { |x| x}, :selected => '1')
+  =f.select(:return_year, (2013..2014).each { |x| x}, :selected => '2013')
+  =f.select(:return_time, %w(anytime morning noon evening late\ night).each { |x| [x, x]}, :selected => 'anytime')
+
+  %br
+  =f.label :passengers
+  =f.select(:passengers, (1..12).each { |x| [x, x]}, :selected => '1')
+  
+  
+  %br
+  =f.submit "Make reservation", :id => 'submittor'
       
-  /= @listdata
-  / - @listdata.each do |l|
-  /   %li
-  /     =l
+
   
