@@ -3,12 +3,6 @@
     $( "#departure_location, #return_location" ).autocomplete({
      source: #{@listdata}
     });
-    $( "#departure_location" ).on('click, blur', function() {
-      $('#location_start_id').val($(this).val());
-    });
-    $( "#return_location" ).on('click, blur', function() {
-      $('#location_end_id').val($(this).val());
-    });
     
     function handleFormResults( data ) {
       var res = data.split('&');
@@ -18,20 +12,26 @@
       res.splice(0,2);
       res.splice(1,1);
       res.splice(2,1);
-      dept = res.splice(2,4);
-      ret = res.splice(2,4)
+      dept = res.splice(2,5);
+      ret = res.splice(2,5)
       
       passengers = "Number of passengers: " + res[2].split('=')[1];
       origin = "From: " + res[0].split('=')[1].replace('%2C', ',').replace(/\+/g, ' ');
       destination = "To: " + res[1].split('=')[1].replace('%2C', ',').replace(/\+/g, ' ');
       
+      //departure date
       dept_date = "Departing: ";
-      for(var i=0;i<dept.length;++i) {
+      dept[0] = dept[0].split('=')[1].split('%7C')[1] + ' ';
+      dept_date += dept[0];
+      for(var i=1;i<dept.length-1;++i) {
         dept_date += dept[i].split('=')[1] + ' ';
       }
       
+      //return date
       ret_date = "Returning: ";
-      for(var i=0;i<ret.length;++i) {
+      ret[0] = ret[0].split('=')[1].split('%7C')[1] + ' ';
+      ret_date += ret[0];
+      for(var i=1;i<ret.length-1;++i) {
         ret_date += ret[i].split('=')[1] + ' ';
       }
       
@@ -43,43 +43,163 @@
       output += ret_date + '\r\n';
       
       alert(output);
-      //buildFormattedOutput(str);
+      //displayOutput(output);
     }
-
+    
+    function evaluateDateTime(segment, direction, val) {
+    //grabs current value of hidden field and splices in new value for selected menu
+    //hidden field values are then compared on submit
+      var target = direction === 'departure' ? 'departure_date' : 'return_date';
+      var curval = $('#' + target + '').val();
+      var curyear, curmnth, curday, newval = '';
+      curmnth = curval.slice(0,2);
+      curday = curval.slice(2,2);
+      curyear = curval.slice(4,4);
+      if(val.length > 4) { val = val.split('|')[0]; }
+      val = val.length < 2 ? '0' + val : val;
+      if(segment === 'year') {
+        newval = curval.slice(0,4) + val;
+      }
+      else if(segment === 'month') {
+        newval = val + curval.slice(2,8);
+      }
+      else {
+        newval = curval.slice(0,2) + val + curval.slice(4,8);
+      }
+      //reset hidden field value
+      $('#' + target + '').val('').val(newval);
+    }
+    
+    function compareDates() {
+      if($('#return_date').val().split('').reverse().join('') <= $('#departure_date').val().split('').reverse().join('')) {
+        msg = 'return date cannot be prior or equal to the departure date';
+        $('.return_date_wrapper, .departure_date_wrapper').css('background', '#fe9989')
+        setTimeout(function() { $('.departure_date_wrapper, .return_date_wrapper').css('background', 'none'); }, 1600
+        );
+        displayError(msg);
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+    
+    function displayError(msg) {
+      $('#flash_message').html(msg);
+      setTimeout(function() { $('#flash_message').html(''); }, 1700
+      );
+    }
+    
+    $('#reservation_departure_year').on('change blur', function() {
+      evaluateDateTime('year', 'departure', $(this).val());
+    });
+    
+    $('#reservation_departure_month').on('change blur', function() {
+      evaluateDateTime('month', 'departure', $(this).val());
+    });
+    
+    $('#reservation_departure_day').on('change blur', function() {
+      evaluateDateTime('day', 'departure', $(this).val());
+    });
+    
+    $('#reservation_return_year').on('change blur', function() {
+      evaluateDateTime('year', 'return', $(this).val());
+    });
+    
+    $('#reservation_return_month').on('change blur', function() {
+      evaluateDateTime('month', 'return', $(this).val());
+    });
+    
+    $('#reservation_return_day').on('change blur', function() {
+      evaluateDateTime('day', 'return', $(this).val());
+    });
+    
+    function validForm() {
+      var errs = 0;
+      var msg = '';
+      var reqs = [
+        'departure_location',
+        'return_location',
+        'reservation_departure_year',
+        'reservation_departure_month',
+        'reservation_departure_day',
+        'reservation_return_year',
+        'reservation_return_month',
+        'reservation_return_day'
+        ];
+      for(var i=0;i<reqs.length;++i) {
+        if($('#' + reqs[i] + '').val().length < 1) {
+          msg = 'select appropriate departure and return dates as well as origin and destination cities';
+          $('.return_date_wrapper, .departure_date_wrapper, #departure_location, #return_location').css('background', '#fe9989')
+          setTimeout(function() { $('.departure_date_wrapper, .return_date_wrapper, #departure_location, #return_location').css('background', 'none'); }, 1600
+          );
+          errs += 1;
+        }
+      }
+      
+      displayError(msg);
+      return errs >= 1 ? false : true;
+      
+    }
+    
     $('#submittor').on('click', function() {
       var results = $('#reservation_form').serialize();
-      handleFormResults(results);
+      if(validForm() && compareDates()) {
+        handleFormResults(results);
+      }
       return false;
     });
     
+    function displayOutput(str) {
+      $('.hidden').ninjaBox({
+         mediaType: 'html',
+         height: 400,
+         width: 600,
+         src: msg
+      });
+      //$('.hidden').colorbox({html: str});
+    }
+    
   });
 
-#resultor
+.hidden{ :style => 'display:none' }
+  .display
+#ninjaBox.overlay
+  .inner_box
+    =link_to('close', "#", :id => "close", :class => "close-button", :onclick => "$.fn.ninjaBox.hide()")
+    .inner_content
+
+#flash_message
+  &nbsp;
 
 = form_for @reservation, :url => @reservation.new_record? ? reservations_path : edit_reservation_path(@reservation), :html => { :multipart => true, :id => "reservation_form" } do |f|
   =f.label "Departing from"
-  =f.text_field :departure_location, :id => "departure_location"
+  =f.text_field :departure_location, :id => "departure_location", :required => true
   =f.hidden_field :location_start_id, :id => "location_start_id"
   
   %br
   =f.label "Destination"
-  =f.text_field :return_location, :id => "return_location"
+  =f.text_field :return_location, :id => "return_location", :required => true
   =f.hidden_field :location_end_id, :id => "location_end_id"
   
   %br
   =f.label :departure_date
-  =f.select(:departure_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m]]}), :selected => Date::MONTHNAMES[0])
-  =f.select(:departure_day, (1..31).each { |x| x}, :selected => '1')
-  =f.select(:departure_year, (2013..2014).each { |x| x}, :selected => '2013')
-  =f.select(:departure_time, %w(anytime morning noon evening late\ night).each { |x| [x, x]}, :selected => 'anytime')
+  .departure_date_wrapper
+    =f.select(:departure_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'please select')
+    =f.select(:departure_day, (1..31).each { |x| x}, :prompt => 'please select')
+    =f.select(:departure_year, (2013..2014).each { |x| x}, :prompt => 'please select')
+    =f.select(:departure_time, %w(anytime morning noon evening late\ night).each { |x| [x, x]}, :selected => 'anytime')
+  =f.hidden_field :departure_date, :id => "departure_date", :value => "00000000"
   
   %br
   =f.label :return_date
-  =f.select(:return_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m]]}), :selected => Date::MONTHNAMES[0])
-  =f.select(:return_day, (1..31).each { |x| x}, :selected => '1')
-  =f.select(:return_year, (2013..2014).each { |x| x}, :selected => '2013')
-  =f.select(:return_time, %w(anytime morning noon evening late\ night).each { |x| [x, x]}, :selected => 'anytime')
-
+  .return_date_wrapper
+    =f.select(:return_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'please select')
+    =f.select(:return_day, (1..31).each { |x| x}, :prompt => 'please select')
+    =f.select(:return_year, (2013..2014).each { |x| x}, :prompt => 'please select')
+    =f.select(:return_time, %w(anytime morning noon evening late\ night).each { |x| [x]}, :selected => 'anytime')
+  =f.hidden_field :return_date, :id => "return_date", :value => "00000000"
+  
   %br
   =f.label :passengers
   =f.select(:passengers, (1..12).each { |x| [x, x]}, :selected => '1')
