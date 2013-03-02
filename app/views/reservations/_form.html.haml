@@ -74,7 +74,7 @@
       if($('#return_date').val().split('').reverse().join('') <= $('#departure_date').val().split('').reverse().join('')) {
         msg = 'return date cannot be prior or equal to the departure date';
         $('.return_date_wrapper, .departure_date_wrapper').css('background', '#fe9989')
-        setTimeout(function() { $('.departure_date_wrapper, .return_date_wrapper').css('background', 'none'); }, 1600
+        setTimeout(function() { $('.departure_date_wrapper, .return_date_wrapper').css('background', 'none'); }, 1800
         );
         displayError(msg);
         return false;
@@ -86,7 +86,7 @@
     
     function displayError(msg) {
       $('#flash_message').html(msg);
-      setTimeout(function() { $('#flash_message').html(''); }, 1700
+      setTimeout(function() { $('#flash_message').html(''); }, 1800
       );
     }
     
@@ -130,9 +130,13 @@
       for(var i=0;i<reqs.length;++i) {
         if($('#' + reqs[i] + '').val().length < 1) {
           msg = 'select appropriate departure and return dates as well as origin and destination cities';
-          $('.return_date_wrapper, .departure_date_wrapper, #departure_location, #return_location').css('background', '#fe9989')
-          setTimeout(function() { $('.departure_date_wrapper, .return_date_wrapper, #departure_location, #return_location').css('background', 'none'); }, 1600
-          );
+          $('.return_date_wrapper, .departure_date_wrapper, #departure_location, #return_location').each(function() {
+            var t = $(this);
+            if(t.val().length < 1) { 
+              t.css('background', '#fe9989');
+              setTimeout( function(){ t.css('background', 'none')}, 1700);
+            }
+          });
           errs += 1;
         }
       }
