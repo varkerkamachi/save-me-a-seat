@@ -33,9 +33,12 @@
 				if( options['mediaType'] == 'video') {
 					innerDOM += '<iframe width="' + width + '" height="' + height + '" src="' + src + '" frameborder="0" allowfullscreen></iframe>';
 				}
-				else {
+				else if( options['mediaType'] == 'image') {
 					innerDOM += '<img src="' + src + '" />';
 				}
+				else {
+				  innerDOM += src;
+			  }
 				
 				$('#ninjaBox .inner_box .inner_content').append(innerDOM);
 			});

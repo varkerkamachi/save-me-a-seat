@@ -1,6 +1,8 @@
 ---
 rails.png: rails.png
 rails/index.png: rails.png
+reservations/close-button.png: reservations/close-button.png
+reservations/close-button/index.png: reservations/close-button.png
 application.js: application.js
 application/index.js: application.js
 application.css: application.css
