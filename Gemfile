@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
-
 #to fix js runtime issue?
 gem 'therubyracer'
-
 gem 'rails', '3.2.9'
 gem 'haml', '3.1.7'
 gem 'jquery-rails'
@@ -58,7 +56,7 @@ end
 # gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
 
 # To use debugger
 # gem 'debugger'

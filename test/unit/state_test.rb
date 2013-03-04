@@ -7,6 +7,12 @@ class StateTest < ActiveSupport::TestCase
     @nocountryid_state = State.new(:country_id=>"", :name=>"New State")
   end
 
+  test "Named scope from city" do
+    @cityid = 1
+    @state = State.first
+    assert_equal(@state.name, State.find(@cityid).name)
+  end
+
   test "Named scope begins with letter" do
     @statesA = State.begins_with_letter('A')
     assert_equal(State.all(:limit=>4).size, @statesA.size)

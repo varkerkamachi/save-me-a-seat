@@ -1,0 +1,235 @@
+
+.colorbox_wrapper
+  .inner_content
+
+#flash_message
+  &nbsp;
+
+= form_for @reservation, :url => @reservation.new_record? ? reservations_path : edit_reservation_path(@reservation), :html => { :multipart => true, :id => "reservation_form", :class => "clearfix" } do |f|
+  =f.label "Departing from"
+  =f.text_field :departure_location, :id => "departure_location"
+  =f.hidden_field :location_start_id, :id => "location_start_id"
+  
+  %p.rows.clearfix
+    =f.label "Destination"
+    =f.text_field :return_location, :id => "return_location"
+    =f.hidden_field :location_end_id, :id => "location_end_id"
+  
+  %p.rows.clearfix
+    =f.label :departure_date
+    .departure_date_wrapper
+      =f.select(:departure_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'please select')
+      =f.select(:departure_day, (1..31).each { |x| x}, :prompt => 'please select')
+      =f.select(:departure_year, (2013..2014).each { |x| x}, :prompt => 'please select')
+      =f.select(:departure_time, %w(anytime morning noon evening late\ night).each { |x| [x, x]}, :selected => 'anytime')
+      =f.hidden_field :departure_date, :id => "departure_date", :value => "00000000"
+  
+  %p.rows.clearfix
+    =f.label :return_date
+    .return_date_wrapper
+      =f.select(:return_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'please select')
+      =f.select(:return_day, (1..31).each { |x| x}, :prompt => 'please select')
+      =f.select(:return_year, (2013..2014).each { |x| x}, :prompt => 'please select')
+      =f.select(:return_time, %w(anytime morning noon evening late\ night).each { |x| [x]}, :selected => 'anytime')
+      =f.hidden_field :return_date, :id => "return_date", :value => "00000000"
+  
+  %p.rows.clearfix
+    =f.label :passengers
+    =f.select(:passengers, (1..12).each { |x| [x, x]}, :selected => '1')
+  
+  
+  %p.rows.clearfix
+    =f.submit "Make reservation", :id => 'submittor'
+      
+
+:javascript
+  jQuery(function() {
+    //set up auto-completers for city fields
+    $( "#departure_location, #return_location" ).autocomplete({
+     source: #{@listdata}
+    });
+
+    function handleFormResults( data ) {
+      var res = data.split('&');
+      var output, passengers, destination, origin, dept, ret, dept_date, ret_date = '';
+      var regx = /^reservation|%5B|%5D/gi;
+
+      res.splice(0,2);
+      res.splice(1,1);
+      res.splice(2,1);
+      dept = res.splice(2,5);
+      ret = res.splice(2,5)
+
+      //passengers, origin, departure...
+      passengers = "Number of passengers: " + res[2].split('=')[1];
+      origin = "From: " + res[0].split('=')[1].replace('%2C', ',').replace(/\+/g, ' ');
+      destination = "To: " + res[1].split('=')[1].replace('%2C', ',').replace(/\+/g, ' ');
+
+      //departure date
+      dept_date = "Departing: ";
+      dept[0] = dept[0].split('=')[1].split('%7C')[1] + ' ';
+      dept_date += dept[0];
+      for(var i=1;i<dept.length-1;++i) {
+        dept_date += dept[i].split('=')[1] + ' ';
+      }
+
+      //return date
+      ret_date = "Returning: ";
+      ret[0] = ret[0].split('=')[1].split('%7C')[1] + ' ';
+      ret_date += ret[0];
+      for(var i=1;i<ret.length-1;++i) {
+        ret_date += ret[i].split('=')[1] + ' ';
+      }
+
+
+      output = '<p>' + passengers + '<\p>';
+      output += '<p>' + origin + '<\p>';
+      output += '<p>' + destination + '<\p>';
+      output += '<p>' + dept_date + '<\p>';
+      output += '<p>' + ret_date + '<\p>';
+      //push content into DOM, setting trigger for lightbox
+      $('.inner_content').html(output);
+      displayOutput();
+    }
+
+    function evaluateDateTime(segment, direction, val) {
+    //grabs current value of hidden field and splices in new value for selected menu
+    //hidden field values are then compared on submit
+      var target = direction === 'departure' ? 'departure_date' : 'return_date';
+      var curval = $('#' + target + '').val();
+      var curyear, curmnth, curday, newval = '';
+      curmnth = curval.slice(0,2);
+      curday = curval.slice(2,2);
+      curyear = curval.slice(4,4);
+      if(val.length > 4) { val = val.split('|')[0]; }
+      val = val.length < 2 ? '0' + val : val;
+      if(segment === 'year') {
+        newval = curval.slice(0,4) + val;
+      }
+      else if(segment === 'month') {
+        newval = val + curval.slice(2,8);
+      }
+      else {
+        newval = curval.slice(0,2) + val + curval.slice(4,8);
+      }
+      //reset hidden field value
+      $('#' + target + '').val('').val(newval);
+    }
+
+    function compareDates() {
+    //function to validate the date fields and ensure departure date is prior to return date
+      var ddate = $('#departure_date').val();
+      var rdate = $('#return_date').val();
+      if(new Date([ddate.substr(0,2), ddate.substr(2,2), ddate.substr(4,4)].join('/')) >= new Date([rdate.substr(0,2), rdate.substr(2,2), rdate.substr(4,4)].join('/'))) {
+        msg = 'The return date cannot be prior or equal to the departure date';
+         $('.return_date_wrapper, .departure_date_wrapper').css('background', '#fe9989')
+         setTimeout(function() { $('.departure_date_wrapper, .return_date_wrapper').css('background', 'none'); }, 1800
+         );
+        displayError(msg);
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+
+    function displayError(msg) {
+    //error message passed to method is displayed 
+      $('#flash_message').html($('#flash_message').html() + '\n' + msg);
+        setTimeout(function() { $('#flash_message').html(''); }, 1800
+      );
+    }
+
+    $('#reservation_departure_year').on('change blur', function() {
+      $('#reservation_return_year').val($(this).val());
+      evaluateDateTime('year', 'departure', $(this).val());
+      evaluateDateTime('year', 'return', $(this).val());
+    });
+
+    $('#reservation_departure_month').on('change blur', function() {
+      $('#reservation_return_month').val($(this).val());
+      evaluateDateTime('month', 'departure', $(this).val());
+      evaluateDateTime('month', 'return', $(this).val());
+    });
+
+    $('#reservation_departure_day').on('change blur', function() {
+      $('#reservation_return_day').val($(this).val());
+      evaluateDateTime('day', 'departure', $(this).val());
+      evaluateDateTime('day', 'return', $(this).val());      
+    });
+
+    $('#reservation_return_year').on('change blur', function() {
+      evaluateDateTime('year', 'return', $(this).val());
+    });
+
+    $('#reservation_return_month').on('change blur', function() {
+      evaluateDateTime('month', 'return', $(this).val());
+    });
+
+    $('#reservation_return_day').on('change blur', function() {
+      evaluateDateTime('day', 'return', $(this).val());
+    });
+
+    function validForm() {
+    //checks for presence of data in city fields
+      var errs = 0;
+      var msg = '';
+      var reqs = [
+        'departure_location',
+        'return_location',
+        'reservation_departure_year',
+        'reservation_departure_month',
+        'reservation_departure_day',
+        'reservation_return_year',
+        'reservation_return_month',
+        'reservation_return_day'
+        ];
+      for(var i=0;i<reqs.length;++i) {
+        if($('#' + reqs[i] + '').val().length < 1) {
+          msg = 'select appropriate departure and return dates as well as origin and destination cities';
+          $('#departure_location, #return_location').each(function() {
+            var t = $(this);
+            if(t.val().length < 1) { 
+              t.css('background', '#fe9989');
+              setTimeout( function(){ t.css('background', 'none')}, 1700);
+            }
+            errs += 1;
+          });          
+        }
+      }
+      if($('#departure_location').val() == $('#return_location').val()) {
+        msg = 'Departure and destination cities cannot be the same';
+        $('#departure_location, #return_location').css('background', '#fe9989');
+        setTimeout( function(){ $('#departure_location, #return_location').css('background', 'none')}, 1700);
+        errs += 1;
+      }
+      displayError(msg);
+      return errs >= 1 ? false : true;
+    }
+
+    $('#submittor').on('click', function() {
+    //methods bound to click event handling...and validation
+      var results = $('#reservation_form').serialize();
+      if(validForm() && compareDates()) {
+        handleFormResults(results);
+      }
+      return false;
+    });
+
+    function displayOutput() {
+    //checks for value from trigger and outputs form submission into colorbox
+      if(hasContent()) {
+        $.colorbox({inline:true, href:".inner_content", width:"360", height:"240"});
+      }
+    }//end function
+
+    function hasContent() {
+      //simple public boolean function to detect presence of content in DOM element to trigger lightbox
+      return $('.inner_content').html().length > 1;
+    }
+    //resets DOM element by removing inner content
+    $(document).bind('cbox_closed', function () {
+      $('.inner_content').html('');
+    });
+  });
+  
