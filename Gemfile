@@ -57,6 +57,7 @@ end
 
 # Deploy with Capistrano
 gem 'capistrano'
+gem 'rvm-capistrano'
 gem 'capistrano-ext'
 
 # To use debugger

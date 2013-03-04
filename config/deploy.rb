@@ -1,5 +1,11 @@
-require "bundler/capistrano"
+#$:.unshift(File.expand_path('./lib', ENV['rvm_path']))
+
+# Load RVM's capistrano plugin.    
+require "rvm/capistrano"
 require 'capistrano/ext/multistage'
+
+set :rvm_ruby_string, 'ruby-1.9.3-p327'
+set :rvm_type, :user  # Don't use system-wide RVM
 
 set :default_stage, "production"
 
