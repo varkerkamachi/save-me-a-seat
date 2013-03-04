@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 #to fix js runtime issue?
 gem 'therubyracer'
+
+gem 'rake', '10.0.3'
 gem 'rails', '3.2.9'
 gem 'haml', '3.1.7'
 gem 'jquery-rails'
