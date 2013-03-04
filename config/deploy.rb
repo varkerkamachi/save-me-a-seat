@@ -1,4 +1,3 @@
-require 'rvm/capistrano'
 require 'capistrano/ext/multistage'
 
 set :rvm_type,              :user
