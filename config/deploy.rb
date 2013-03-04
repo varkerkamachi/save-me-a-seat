@@ -11,7 +11,7 @@ set :default_stage, "production"
 
 task :production do
   set :rvm_ruby,              "ruby-1.9.3-p327"
-  set :rvm_gemset,            "global"
+  set :rvm_gemset,            "saveseat"
   set :rvm_gem_home,          "/home/deploy/.rvm/gems/#{fetch(:rvm_ruby)}@#{fetch(:rvm_gemset)}"
   set :rvm_ruby_path,         "/home/deploy/.rvm/rubies/#{fetch(:rvm_ruby)}"
 
@@ -34,12 +34,6 @@ task :production do
   #set :stages, ["staging", "production"]
   #set :default_stage, "production"
 
-
-  set :rvm_type, :user
-  set :rvm_ruby, "ruby-1.9.2-p180"
-  set :rvm_gemset, "global"
-  set :rvm_gem_home, "/home/deploy/.rvm/gems/#{fetch(:rvm_ruby)}@#{fetch(:rvm_gemset)}"
-  set :rvm_ruby_path, "/home/deploy/.rvm/rubies/#{fetch(:rvm_ruby)}"
   # set :default_environment, {
   # 'PATH' => "#{fetch(:rvm_gem_home)}/bin:/home/deploy/.rvm/bin:#{fetch(:rvm_ruby_path)}/bin:$PATH;",
   # 'RUBY_VERSION' => "#{fetch(:rvm_ruby)}",
