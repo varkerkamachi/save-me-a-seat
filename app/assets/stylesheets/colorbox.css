@@ -19,8 +19,8 @@
     order/nesting of the generated HTML, so that the structure easier to understand.
 */
 #cboxOverlay{background:#202020 0 0 repeat;}
-/*#colorbox{}*/
-  #colorbox, #cboxWrapper{height:225px !important; width:285px !important;}
+#colorbox{}
+  /*#colorbox, #cboxWrapper{height:225px !important; width:285px !important;}*/
     #cboxTopLeft{width:21px; height:21px; background:transparent -100px 0 no-repeat;}
     #cboxTopRight{width:21px; height:21px; background:transparent -129px 0 no-repeat;}
     #cboxBottomLeft{width:21px; height:21px; background:transparent -100px -29px no-repeat;}
@@ -46,8 +46,8 @@
         #cboxClose{
           background:url('reservations/close-button.png') center center no-repeat;
         	position:absolute;
-        	top:10px;
-        	right:20px;
+        	top:5px;
+        	right:10px;
         	width:30px;
         	height:30px;
         	opacity:.8;

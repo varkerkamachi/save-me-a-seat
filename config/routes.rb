@@ -1,6 +1,6 @@
 SaveMeASeat::Application.routes.draw do
   
-  root :to => 'home#index'
+  root :to => 'reservations#new'
   
   resources :reservations
   resources :countries, :only => [:index, :show]

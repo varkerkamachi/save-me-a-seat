@@ -1,5 +1,5 @@
 
-.colorbox_wrapper{ :style=>"display:none;" }
+.colorbox_wrapper
   .inner_content
 
 #flash_message
@@ -136,7 +136,7 @@
     function displayError(msg) {
     //error message passed to method is displayed 
       $('#flash_message').html($('#flash_message').html() + '\n' + msg);
-      setTimeout(function() { $('#flash_message').html(''); }, 1800
+        setTimeout(function() { $('#flash_message').html(''); }, 1800
       );
     }
 
@@ -219,7 +219,7 @@
     function displayOutput() {
     //checks for value from trigger and outputs form submission into colorbox
       if(hasContent()) {
-        $.colorbox({inline:true, href:".inner_content", width:"280", height:"120"});
+        $.colorbox({inline:true, href:".inner_content", width:"360", height:"240"});
       }
     }//end function
 

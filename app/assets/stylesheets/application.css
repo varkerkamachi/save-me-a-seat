@@ -99,15 +99,30 @@ h2 {
 #wrapper {
   position:relative;
   width:850px;
-  padding:0 20px;
+  padding:10px 0 20px;
   margin:0 auto;
 }
 
+.colorbox_wrapper {
+	display:none; 
+}
+
 .inner_content {
+	float:left;
   padding:30px;
   text-align:left;
-  height:190px;
-  width:225px;
+}
+
+.inner_content p {
+	line-height:25px;
+}
+
+#flash_message {
+	min-height:35px;
+	color:#984342;
+	padding:15px 0 0;
+	font-weight:bold;
+	overflow:auto;
 }
 
 .ui-helper-hidden-accessible {
@@ -148,7 +163,7 @@ ul.ui-autocomplete li a:hover {
 
 form{
   text-shadow:0 0 2px #c8c7d2;
-  padding:30px 20px;
+  padding:0 20px 30px;
 }
 
 form p.rows {
@@ -240,6 +255,17 @@ form input, div {
   form select { 
     padding:5px 3px;
   }
+	#flash_message {
+		z-index:3;
+		min-height:0;
+		background:white;
+		position:fixed;
+		top:5px;
+		left:0;
+	}
+	#submittor {
+		width:88%;
+	}
 
 }
 
