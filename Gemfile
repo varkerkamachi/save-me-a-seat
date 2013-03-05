@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 #to fix js runtime issue?
+ruby "1.9.3-p327"
+
 gem 'therubyracer'
 
 gem 'bundler', '1.3.1'
