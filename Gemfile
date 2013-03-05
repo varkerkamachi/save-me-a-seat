@@ -21,7 +21,7 @@ gem "net-http-persistent", "2.8"
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :database do
-  gem 'sqlite3'
+  gem 'pg'
   gem 'mysql2', '0.3.11'
 end
 
