@@ -6,8 +6,8 @@
     - if @pagedescription
       %meta{ :name => "Description", :content => "#{@pagedescription}" }
     %title="#{@pagetitle}"
-    =javascript_include_tag "application", "jquery-1.9.1", "jquery-ui-1.10.1.custom", "jquery.colorbox-min"
-    =stylesheet_link_tag "application", "colorbox"
+    =javascript_include_tag "application" #, "jquery-1.9.1", "jquery-ui-1.10.1.custom", "jquery.colorbox-min"
+    =stylesheet_link_tag "application" #, "colorbox"
     %noscript="You must have javascript enabled to view this site."
 
 
