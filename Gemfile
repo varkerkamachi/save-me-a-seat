@@ -1,7 +1,8 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 #to fix js runtime issue?
 gem 'therubyracer'
 
+gem 'bundler', '1.3.1'
 gem 'rake', '10.0.3'
 gem 'rails', '3.2.9'
 gem 'haml', '3.1.7'
@@ -10,7 +11,7 @@ gem 'paperclip', '3.4.0'
 gem "nokogiri", "1.5.6"
 gem "webrobots", "0.0.13"
 gem "mechanize", "2.5.1"
-gem "hoe", "3.4"
+#gem "hoe", "3.4"
 gem "net-http-digest_auth", "1.2.1"
 gem "net-http-persistent", "2.8"
 
