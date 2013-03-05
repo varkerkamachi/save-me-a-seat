@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 #to fix js runtime issue?
-ruby "1.9.3-p327"
+ruby "1.9.3"
 
 gem 'therubyracer'
 
