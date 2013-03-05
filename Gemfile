@@ -2,8 +2,6 @@ source 'http://rubygems.org'
 #to fix js runtime issue?
 ruby "1.9.3"
 
-gem 'therubyracer'
-
 gem 'bundler', '1.3.1'
 gem 'rake', '10.0.3'
 gem 'rails', '3.2.9'
@@ -29,6 +27,7 @@ end
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
+  gem 'therubyracer'
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
 
