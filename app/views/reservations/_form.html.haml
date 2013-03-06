@@ -18,18 +18,18 @@
   %p.rows.clearfix
     =f.label :departure_date
     .departure_date_wrapper
-      =f.select(:departure_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'please select')
-      =f.select(:departure_day, (1..31).each { |x| x}, :prompt => 'please select')
-      =f.select(:departure_year, (2013..2014).each { |x| x}, :prompt => 'please select')
+      =f.select(:departure_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'month')
+      =f.select(:departure_day, (1..31).each { |x| x}, :prompt => 'day')
+      =f.select(:departure_year, (2013..2014).each { |x| x}, :prompt => 'year')
       =f.select(:departure_time, %w(anytime morning noon evening late\ night).each { |x| [x, x]}, :selected => 'anytime')
       =f.hidden_field :departure_date, :id => "departure_date", :value => "00000000"
   
   %p.rows.clearfix
     =f.label :return_date
     .return_date_wrapper
-      =f.select(:return_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'please select')
-      =f.select(:return_day, (1..31).each { |x| x}, :prompt => 'please select')
-      =f.select(:return_year, (2013..2014).each { |x| x}, :prompt => 'please select')
+      =f.select(:return_month, options_for_select((1..12).map {|m| [Date::MONTHNAMES[m], "#{m}|#{Date::MONTHNAMES[m]}"]}), :prompt => 'month')
+      =f.select(:return_day, (1..31).each { |x| x}, :prompt => 'day')
+      =f.select(:return_year, (2013..2014).each { |x| x}, :prompt => 'year')
       =f.select(:return_time, %w(anytime morning noon evening late\ night).each { |x| [x]}, :selected => 'anytime')
       =f.hidden_field :return_date, :id => "return_date", :value => "00000000"
   
